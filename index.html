@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HBD!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #ff7043;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .btn:hover {
+      background-color: #f4511e;
+    }
+    .container {
+      position: relative;
+      width: 200px;
+      height: 300px;
+      display: flex;
+      flex-direction: column-reverse;
+      align-items: center;
+      justify-content: flex-end;
+      margin: 0 auto;
+      z-index: 10;
+    }
+    .layer {
+      background-color: #e57373;
+      border-radius: 5px;
+      height: 50px;
+      position: absolute;
+      top: 8rem;
+      opacity: 0;
+      transition: transform 0.5s, opacity 0.5s;
+    }
+    .layer:nth-child(1) {
+      width: 200px;
+    }
+    .layer:nth-child(2) {
+      width: 170px;
+      background-color: #f06292;
+    }
+    .layer:nth-child(3) {
+      width: 140px;
+      background-color: #ba68c8;
+    }
+    .candle {
+      width: 10px;
+      height: 30px;
+      background-color: #ffd54f;
+      position: absolute;
+      top: -35px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .flame {
+      width: 10px;
+      height: 10px;
+      background-color: orange;
+      border-radius: 50%;
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: flicker 0.5s infinite;
+    }
+    @keyframes flicker {
+      0%, 100% {
+        transform: translate(-50%, -3px) scale(1);
+      }
+      50% {
+        transform: translate(-50%, 0px) scale(1.1);
+      }
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #ff4081;
+      font-weight: bold;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    .balloon {
+      width: 30px;
+      height: 40px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -50px;
+      animation: float 5s linear infinite;
+    }
+    @keyframes float {
+      0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-120vh) scale(1.2);
+        opacity: 0.5;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button class="btn" id="startButton" onclick="startAnimation()">Click me for a surprise!</button>
+  <div class="container" id="cakeContainer">
+    <div class="layer" style="--order: 1;"></div>
+    <div class="layer" style="--order: 2;"></div>
+    <div class="layer" style="--order: 3;">
+      <div class="candle">
+        <div class="flame"></div>
+      </div>
+    </div>
+  </div>
+  <div class="message" id="message">Hey, December 1st is here! Time to celebrate your birthday, ray!</div>
+
+  <script>
+    function startAnimation() {
+      // Hilangkan tombol
+      const button = document.getElementById('startButton');
+      button.style.display = 'none';
+
+      // Ubah warna latar belakang
+      document.body.style.backgroundColor = '#FFF7D1';
+
+      // Tampilkan kue
+      const layers = document.querySelectorAll('.layer');
+      const message = document.getElementById('message');
+
+      layers.forEach((layer, index) => {
+        setTimeout(() => {
+          layer.style.opacity = 1;
+          layer.style.transform = `translateY(${(2 - index) * 50}px)`;
+        }, index * 600);
+      });
+
+      setTimeout(() => {
+        message.style.opacity = 1;
+      }, layers.length * 750);
+
+      // Tambahkan balon
+      generateBalloons(50);
+    }
+
+    function generateBalloons(count) {
+      for (let i = 0; i < count; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.left = Math.random() * window.innerWidth + 'px';
+        balloon.style.backgroundColor = getRandomColor();
+        balloon.style.animationDuration = 4 + Math.random() * 2 + 's';
+        document.body.appendChild(balloon);
+
+        // Hapus balon setelah selesai animasi
+        balloon.addEventListener('animationend', () => {
+          balloon.remove();
+        });
+      }
+    }
+
+    function getRandomColor() {
+      const colors = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#03a9f4', '#4caf50', '#ffeb3b', '#ff9800'];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+</body>
+</html>
